@@ -1,0 +1,1032 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Jadon's Short-Form Studio | Video Editor &amp; Content Creator</title>
+  
+  <!-- Google Fonts: Plus Jakarta Sans for headers & Inter for reading clarity -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            // Ross-inspired brand palette: Clean Storefront Blue (#0083CA), Crisp Navy, and Pure White
+            studio: {
+              blue: '#0083CA',
+              dark: '#06132D',
+              surface: '#0A1C3E',
+              card: '#0F2652',
+              cardBorder: '#1E3A70',
+              sky: '#38BDF8',
+              cyan: '#0EA5E9'
+            }
+          },
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            display: ['"Plus Jakarta Sans"', 'sans-serif']
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    /* Sleek scrollbar */
+    ::-webkit-scrollbar {
+      width: 7px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #06132D;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #0083CA;
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #38BDF8;
+    }
+
+    /* 9:16 vertical ratio enforcement */
+    .aspect-vertical {
+      aspect-ratio: 9 / 16;
+    }
+
+    /* Clean subtle glow */
+    .studio-glow {
+      box-shadow: 0 10px 30px -10px rgba(0, 131, 202, 0.4);
+    }
+    .studio-glow-lg {
+      box-shadow: 0 20px 50px -15px rgba(0, 131, 202, 0.5);
+    }
+
+    /* Fullscreen and theater fallback */
+    .theater-active {
+      position: fixed !important;
+      inset: 0 !important;
+      z-index: 99999 !important;
+      width: 100vw !important;
+      height: 100vh !important;
+      max-width: none !important;
+      border-radius: 0 !important;
+      background: #000000 !important;
+      display: flex !important;
+      flex-direction: column !important;
+      justify-content: center !important;
+      align-items: center !important;
+    }
+    .theater-active video {
+      max-height: 88vh !important;
+      width: auto !important;
+      max-width: 100% !important;
+      object-fit: contain !important;
+    }
+
+    /* Glassmorphism utility */
+    .glass-nav {
+      background: rgba(6, 19, 45, 0.88);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+    }
+  </style>
+</head>
+
+<body class="bg-studio-dark text-slate-100 font-sans antialiased selection:bg-studio-blue selection:text-white relative min-h-screen">
+
+  <!-- Main Navigation Bar -->
+  <header class="fixed top-0 left-0 right-0 z-50 glass-nav border-b border-studio-cardBorder/50 transition-all duration-300">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+      
+      <!-- Brand Logo -->
+      <a href="#hero" class="flex items-center gap-3 group">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-studio-blue to-studio-sky flex items-center justify-center text-white font-black text-lg shadow-lg group-hover:scale-105 transition-transform">
+          <i class="fa-solid fa-play text-xs ml-0.5"></i>
+        </div>
+        <div>
+          <span class="font-display font-bold text-lg sm:text-xl tracking-tight text-white group-hover:text-studio-sky transition-colors">
+            Jadon's <span class="text-studio-blue font-extrabold">Short-Form Studio</span>
+          </span>
+          <span class="block text-[11px] text-slate-400 font-medium">Reels • TikTok • Shorts Specialist</span>
+        </div>
+      </a>
+
+      <!-- Desktop Links -->
+      <nav class="hidden md:flex items-center gap-8 text-sm font-medium">
+        <a href="#about" class="text-slate-300 hover:text-white transition-colors">About</a>
+        <a href="#samples" class="text-slate-300 hover:text-white transition-colors">Work Samples</a>
+        <a href="#toolkit" class="text-slate-300 hover:text-white transition-colors">Toolkit</a>
+        <a href="#contact" class="px-5 py-2.5 rounded-full bg-studio-blue hover:bg-studio-sky text-white font-semibold transition-all studio-glow flex items-center gap-2">
+          <i class="fa-regular fa-paper-plane text-xs"></i>
+          <span>Let's Connect</span>
+        </a>
+      </nav>
+
+      <!-- Mobile Menu Toggle -->
+      <button id="mobileMenuBtn" aria-label="Toggle Menu" class="md:hidden p-2.5 rounded-xl text-slate-300 hover:text-white hover:bg-studio-surface transition-colors">
+        <i class="fa-solid fa-bars text-xl" id="menuIcon"></i>
+      </button>
+    </div>
+
+    <!-- Mobile Navigation Drawer -->
+    <div id="mobileMenu" class="hidden md:hidden px-4 pt-2 pb-6 bg-studio-surface border-b border-studio-cardBorder space-y-3">
+      <a href="#about" class="block px-3 py-2 rounded-lg text-sm font-medium text-slate-200 hover:bg-studio-card mobile-nav-link">About Me</a>
+      <a href="#samples" class="block px-3 py-2 rounded-lg text-sm font-medium text-slate-200 hover:bg-studio-card mobile-nav-link">Work Samples</a>
+      <a href="#toolkit" class="block px-3 py-2 rounded-lg text-sm font-medium text-slate-200 hover:bg-studio-card mobile-nav-link">Toolkit &amp; Software</a>
+      <a href="#contact" class="block px-3 py-2 text-center rounded-xl bg-studio-blue text-white font-semibold text-sm mobile-nav-link">Contact Jadon</a>
+    </div>
+  </header>
+
+  <main class="pt-20">
+    <section id="hero" class="relative overflow-hidden pt-12 pb-20 md:py-28">
+      <!-- Ambient Glows -->
+      <div class="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-studio-blue/15 rounded-full blur-3xl pointer-events-none -z-10"></div>
+
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="max-w-3xl mx-auto text-center space-y-6">
+          
+          <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-studio-surface border border-studio-cardBorder text-xs font-semibold text-studio-sky shadow-sm">
+            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+            Available for Freelance &amp; Video Editing Roles
+          </div>
+
+          <h1 class="font-display text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-white leading-tight">
+            High-Retention Cuts That 
+            <span class="bg-gradient-to-r from-studio-sky via-studio-blue to-blue-400 bg-clip-text text-transparent">
+              Stop The Scroll
+            </span>
+          </h1>
+
+          <p class="text-base sm:text-lg text-slate-300 max-w-2xl mx-auto leading-relaxed">
+            I transform long interviews, events, and raw footage into fast-paced vertical stories optimized for TikTok, Instagram Reels, and YouTube Shorts — engineered for maximum watch-time and authentic audience connection.
+          </p>
+
+          <div class="flex flex-wrap items-center justify-center gap-4 pt-4">
+            <a href="#samples" class="px-7 py-3.5 rounded-xl bg-studio-blue hover:bg-studio-sky text-white font-bold text-sm sm:text-base transition-all duration-200 studio-glow flex items-center gap-2">
+              <i class="fa-solid fa-play text-xs"></i>
+              <span>Watch Featured Samples</span>
+            </a>
+            <a href="#contact" class="px-7 py-3.5 rounded-xl bg-studio-surface hover:bg-studio-card border border-studio-cardBorder text-slate-200 font-semibold text-sm sm:text-base transition-all duration-200 flex items-center gap-2">
+              <i class="fa-regular fa-envelope text-sm"></i>
+              <span>Get in Touch</span>
+            </a>
+          </div>
+
+          <!-- Proof Metrics -->
+          <div class="pt-8 grid grid-cols-3 gap-6 max-w-lg mx-auto border-t border-studio-cardBorder/60">
+            <div>
+              <p class="font-display font-extrabold text-2xl text-white">9:16</p>
+              <p class="text-xs text-slate-400 uppercase tracking-wider font-medium">Vertical Native</p>
+            </div>
+            <div>
+              <p class="font-display font-extrabold text-2xl text-studio-sky">CapCut &amp; Clipchamp</p>
+              <p class="text-xs text-slate-400 uppercase tracking-wider font-medium">Core Tooling</p>
+            </div>
+            <div>
+              <p class="font-display font-extrabold text-2xl text-white">100%</p>
+              <p class="text-xs text-slate-400 uppercase tracking-wider font-medium">Story Focused</p>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <section id="about" class="py-20 bg-studio-surface/60 border-y border-studio-cardBorder/60 relative">
+      <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        
+        <div class="text-center mb-10">
+          <div class="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-studio-sky bg-studio-dark/80 px-3.5 py-1.5 rounded-full border border-studio-cardBorder mb-3">
+            <i class="fa-regular fa-id-badge"></i>
+            <span>About The Creator</span>
+          </div>
+          <h2 class="font-display text-3xl sm:text-4xl font-extrabold text-white">
+            Behind the Cuts
+          </h2>
+        </div>
+
+        <div class="bg-gradient-to-br from-studio-card to-studio-surface p-7 sm:p-10 rounded-3xl border border-studio-cardBorder shadow-xl relative overflow-hidden">
+          <div class="space-y-6 text-center sm:text-left">
+            <div class="flex flex-col sm:flex-row items-center gap-6 pb-6 border-b border-studio-cardBorder/60">
+              <div class="w-20 h-20 rounded-2xl bg-gradient-to-tr from-studio-blue to-studio-sky flex items-center justify-center text-white text-3xl shadow-lg shrink-0">
+                <i class="fa-solid fa-clapperboard"></i>
+              </div>
+              <div>
+                <h3 class="font-display text-2xl font-bold text-white">Jadon Roberts</h3>
+                <p class="text-studio-sky text-sm font-medium">Short-Form Video Specialist</p>
+              </div>
+            </div>
+
+            <!-- Professional yet casual 2-3 sentences as requested -->
+            <p class="text-slate-200 text-base sm:text-lg leading-relaxed">
+              I’m a recent graduate with hands-on video editing experience who lives and breathes short-form storytelling. Whether it’s pacing a viral TikTok hook, syncing punchy sound design in CapCut, or assembling seamless cuts in Microsoft Clipchamp, I specialize in crafting vertical content that genuinely connects. From inspiring athlete spotlights to high-energy community recaps, I turn raw clips into polished stories people actually want to watch.
+            </p>
+
+            <!-- Software badges -->
+            <div class="pt-2">
+              <p class="text-xs font-semibold uppercase tracking-wider text-slate-400 mb-3">Software &amp; Tools</p>
+              <div class="flex flex-wrap gap-2.5 justify-center sm:justify-start">
+                <span class="px-3.5 py-1.5 rounded-xl bg-studio-dark/80 border border-studio-cardBorder text-xs font-medium text-slate-200 flex items-center gap-2">
+                  <i class="fa-brands fa-microsoft text-blue-400"></i> Microsoft Clipchamp
+                </span>
+                <span class="px-3.5 py-1.5 rounded-xl bg-studio-dark/80 border border-studio-cardBorder text-xs font-medium text-slate-200 flex items-center gap-2">
+                  <i class="fa-solid fa-scissors text-studio-sky"></i> CapCut
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <section id="samples" class="py-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      
+      <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
+        <div>
+          <div class="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-studio-sky bg-studio-surface px-3 py-1.5 rounded-full border border-studio-cardBorder mb-3">
+            <i class="fa-solid fa-film"></i>
+            <span>Featured Portfolio Samples</span>
+          </div>
+          <h2 class="font-display text-3xl sm:text-4xl font-extrabold text-white">
+            Special Olympics Highlights
+          </h2>
+          <p class="text-slate-400 text-sm sm:text-base mt-2 max-w-xl">
+            Produced during my communications internship with Special Olympics. I cut, paced, and captioned these vertical shorts to boost audience engagement, expand social reach, and elevate community brand recognition.
+          </p>
+        </div>
+
+        <div class="flex items-center gap-3">
+          <span class="px-3 py-1.5 rounded-lg bg-studio-surface border border-studio-cardBorder text-xs text-slate-300 font-medium">
+            <i class="fa-solid fa-volume-high text-studio-sky mr-1"></i> Audio Enabled
+          </span>
+          <span class="px-3 py-1.5 rounded-lg bg-studio-surface border border-studio-cardBorder text-xs text-slate-300 font-medium">
+            <i class="fa-solid fa-mobile-screen text-studio-sky mr-1"></i> 9:16 Vertical
+          </span>
+        </div>
+      </div>
+
+      <!-- 3 Primary Vertical Video Reels (Matching the 3 uploaded MP4s) -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
+
+        <!-- ================= WORK SAMPLE 1 ================= -->
+        <div class="bg-studio-surface/90 rounded-3xl border border-studio-cardBorder hover:border-studio-blue/70 transition-all p-4 flex flex-col shadow-xl group">
+          
+          <!-- Vertical Video Viewport with Instant Drive Embed Loader -->
+          <div class="video-container relative w-full aspect-vertical bg-black rounded-2xl overflow-hidden shadow-inner flex flex-col justify-end select-none" id="player-container-1">
+            
+            <!-- Poster Screenshot / Thumbnail -->
+            <div id="poster-1" class="absolute inset-0 w-full h-full bg-cover bg-center cursor-pointer z-10 transition-opacity duration-300 flex items-center justify-center" onclick="activateDrivePlayer(1)">
+              <img 
+                src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 720 1280' width='100%' height='100%'><defs><linearGradient id='bg1' x1='0%25' y1='0%25' x2='100%25' y2='100%25'><stop offset='0%25' stop-color='%2306132D'/><stop offset='60%25' stop-color='%230A1C3E'/><stop offset='100%25' stop-color='%230083CA'/></linearGradient></defs><rect width='720' height='1280' fill='url(%23bg1)'/><circle cx='360' cy='460' r='140' fill='%231E3A70' opacity='0.7'/><circle cx='360' cy='420' r='60' fill='%23FFFFFF' opacity='0.85'/><path d='M250 590 C250 510, 470 510, 470 590 Z' fill='%23FFFFFF' opacity='0.85'/><rect x='80' y='800' width='560' height='170' rx='24' fill='%23000000' opacity='0.75'/><text x='360' y='865' fill='%23FFFFFF' font-family='sans-serif' font-weight='800' font-size='32' text-anchor='middle'>Being a Special</text><text x='360' y='920' fill='%2338BDF8' font-family='sans-serif' font-weight='800' font-size='32' text-anchor='middle'>Olympics athlete...</text><rect x='220' y='220' width='280' height='44' rx='22' fill='%230083CA'/><text x='360' y='249' fill='%23FFFFFF' font-family='sans-serif' font-weight='700' font-size='18' text-anchor='middle' letter-spacing='2'>ATHLETE SPOTLIGHT</text></svg>" 
+                alt="Never Give Up Poster"
+                class="w-full h-full object-cover"
+              />
+
+              <!-- Top Micro Tag on Poster -->
+              <div class="absolute top-3 inset-x-3 flex items-center justify-between z-20 pointer-events-none">
+                <span class="px-2.5 py-1 rounded-full bg-black/70 backdrop-blur-md text-[10px] font-bold tracking-wider text-white border border-white/10 uppercase">
+                  Athlete Spotlight
+                </span>
+                <span class="w-8 h-8 rounded-full bg-black/70 backdrop-blur-md text-slate-300 flex items-center justify-center border border-white/10">
+                  <i class="fa-brands fa-google-drive text-xs text-emerald-400"></i>
+                </span>
+              </div>
+
+              <!-- Big Tap-To-Play Button Overlay -->
+              <button 
+                type="button"
+                aria-label="Play Reel 1"
+                class="absolute m-auto w-16 h-16 rounded-full bg-studio-blue/95 hover:bg-studio-sky text-white flex items-center justify-center text-xl shadow-2xl z-20 transition-all duration-200 transform group-hover:scale-110 studio-glow">
+                <i class="fa-solid fa-play ml-1"></i>
+              </button>
+
+              <div class="absolute bottom-3 inset-x-3 z-20 pointer-events-none text-center">
+                <span class="px-3 py-1 rounded-full bg-black/75 backdrop-blur-md text-[11px] font-medium text-slate-300 border border-white/10">
+                  <i class="fa-solid fa-arrow-pointer text-studio-sky mr-1"></i> Tap to play video
+                </span>
+              </div>
+            </div>
+
+            <!-- Active Google Drive Iframe Embed Container -->
+            <iframe 
+              id="drive-frame-1" 
+              class="w-full h-full border-0 absolute inset-0 bg-black"
+              src=""
+              data-src="https://drive.google.com/file/d/1WKxtkPvQiCl34yLa2yZSuHWhx7I-QASb/preview"
+              allow="autoplay; fullscreen"
+              loading="lazy"
+              title="Special Olympics Athlete Spotlight">
+            </iframe>
+
+          </div>
+
+          <!-- Video Metadata & Actions -->
+          <div class="mt-4 flex-1 flex flex-col justify-between space-y-3">
+            <div>
+              <p class="text-xs text-studio-sky font-semibold">Special Olympics • Teaser</p>
+              <h3 class="font-display font-bold text-white text-base mt-0.5 group-hover:text-studio-sky transition-colors">
+                "Never Give Up": Overcoming Odds
+              </h3>
+              <p class="text-slate-400 text-xs mt-1.5 line-clamp-2 leading-relaxed">
+                Fast-paced athlete narrative focusing on resilience, proving doubters wrong, and learning differently.
+              </p>
+            </div>
+
+            <div class="pt-2 border-t border-studio-cardBorder space-y-2">
+              <div class="flex items-center justify-between flex-wrap gap-1.5">
+                <span class="text-[11px] font-semibold uppercase tracking-wider text-slate-400">Software Used:</span>
+                <div class="flex items-center gap-1.5">
+                  <span class="px-2 py-0.5 rounded-lg bg-blue-500/15 border border-blue-500/30 text-[11px] font-semibold text-studio-sky flex items-center gap-1">
+                    <i class="fa-brands fa-microsoft text-[10px]"></i> Clipchamp
+                  </span>
+                  <span class="px-2 py-0.5 rounded-lg bg-cyan-500/15 border border-cyan-500/30 text-[11px] font-semibold text-studio-sky flex items-center gap-1">
+                    <i class="fa-solid fa-scissors text-[10px]"></i> CapCut
+                  </span>
+                </div>
+              </div>
+
+              <div class="grid grid-cols-2 gap-2 pt-1">
+                <button onclick="openModal(1)" class="w-full py-2 rounded-xl bg-studio-card hover:bg-studio-dark border border-studio-cardBorder text-xs text-slate-200 font-medium flex items-center justify-center gap-1.5 transition-colors">
+                  <i class="fa-regular fa-file-lines text-studio-sky"></i>
+                  <span>Transcript</span>
+                </button>
+                <a 
+                  id="drive-link-1"
+                  class="drive-link w-full py-2 rounded-xl bg-studio-blue/20 hover:bg-studio-blue/30 border border-studio-blue/40 text-xs text-studio-sky font-medium flex items-center justify-center gap-1.5 transition-colors"
+                  href="https://drive.google.com/file/d/1WKxtkPvQiCl34yLa2yZSuHWhx7I-QASb/view" 
+                  target="_blank"
+                  rel="noopener noreferrer">
+                  <i class="fa-brands fa-google-drive text-emerald-400"></i>
+                  <span>Open in Drive</span>
+                </a>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+
+        <!-- ================= WORK SAMPLE 2 ================= -->
+        <div class="bg-studio-surface/90 rounded-3xl border border-studio-cardBorder hover:border-studio-blue/70 transition-all p-4 flex flex-col shadow-xl group">
+          
+          <div class="video-container relative w-full aspect-vertical bg-black rounded-2xl overflow-hidden shadow-inner flex flex-col justify-end select-none" id="player-container-2">
+            
+            <div id="poster-2" class="absolute inset-0 w-full h-full bg-cover bg-center cursor-pointer z-10 transition-opacity duration-300 flex items-center justify-center" onclick="activateDrivePlayer(2)">
+              <img 
+                src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 720 1280' width='100%' height='100%'><defs><linearGradient id='bg2' x1='0%25' y1='0%25' x2='100%25' y2='100%25'><stop offset='0%25' stop-color='%23081A3A'/><stop offset='50%25' stop-color='%23122A5E'/><stop offset='100%25' stop-color='%230083CA'/></linearGradient></defs><rect width='720' height='1280' fill='url(%23bg2)'/><rect x='140' y='320' width='440' height='360' rx='28' fill='%23000000' opacity='0.5'/><circle cx='360' cy='460' r='75' fill='%2338BDF8' opacity='0.25'/><rect x='346' y='390' width='28' height='90' rx='14' fill='%23FFFFFF'/><path d='M320 450 C320 500, 400 500, 400 450' stroke='%23FFFFFF' stroke-width='10' fill='none'/><line x1='360' y1='500' x2='360' y2='545' stroke='%23FFFFFF' stroke-width='10'/><rect x='80' y='800' width='560' height='170' rx='24' fill='%23000000' opacity='0.75'/><text x='360' y='865' fill='%23FFFFFF' font-family='sans-serif' font-weight='800' font-size='30' text-anchor='middle'>Villanova does a really</text><text x='360' y='920' fill='%2338BDF8' font-family='sans-serif' font-weight='800' font-size='30' text-anchor='middle'>good job of offering...</text><rect x='200' y='220' width='320' height='44' rx='22' fill='%230083CA'/><text x='360' y='249' fill='%23FFFFFF' font-family='sans-serif' font-weight='700' font-size='18' text-anchor='middle' letter-spacing='2'>PODCAST INTERVIEW</text></svg>" 
+                alt="Villanova Podcast Poster"
+                class="w-full h-full object-cover"
+              />
+
+              <div class="absolute top-3 inset-x-3 flex items-center justify-between z-20 pointer-events-none">
+                <span class="px-2.5 py-1 rounded-full bg-black/70 backdrop-blur-md text-[10px] font-bold tracking-wider text-white border border-white/10 uppercase">
+                  Podcast Interview
+                </span>
+                <span class="w-8 h-8 rounded-full bg-black/70 backdrop-blur-md text-slate-300 flex items-center justify-center border border-white/10">
+                  <i class="fa-brands fa-google-drive text-xs text-emerald-400"></i>
+                </span>
+              </div>
+
+              <button 
+                type="button"
+                aria-label="Play Reel 2"
+                class="absolute m-auto w-16 h-16 rounded-full bg-studio-blue/95 hover:bg-studio-sky text-white flex items-center justify-center text-xl shadow-2xl z-20 transition-all duration-200 transform group-hover:scale-110 studio-glow">
+                <i class="fa-solid fa-play ml-1"></i>
+              </button>
+
+              <div class="absolute bottom-3 inset-x-3 z-20 pointer-events-none text-center">
+                <span class="px-3 py-1 rounded-full bg-black/75 backdrop-blur-md text-[11px] font-medium text-slate-300 border border-white/10">
+                  <i class="fa-solid fa-arrow-pointer text-studio-sky mr-1"></i> Tap to play video
+                </span>
+              </div>
+            </div>
+
+            <iframe 
+              id="drive-frame-2" 
+              class="w-full h-full border-0 absolute inset-0 bg-black"
+              src=""
+              data-src="https://drive.google.com/file/d/16wM66jrlF82nWzvBRuCsfUCBLp3NdgFY/preview"
+              allow="autoplay; fullscreen"
+              loading="lazy"
+              title="Villanova Inclusion Podcast">
+            </iframe>
+
+          </div>
+
+          <div class="mt-4 flex-1 flex flex-col justify-between space-y-3">
+            <div>
+              <p class="text-xs text-studio-sky font-semibold">Villanova Inclusion • Teaser</p>
+              <h3 class="font-display font-bold text-white text-base mt-0.5 group-hover:text-studio-sky transition-colors">
+                Holistic College Experience
+              </h3>
+              <p class="text-slate-400 text-xs mt-1.5 line-clamp-2 leading-relaxed">
+                Multi-camera cutdown highlighting student decision making and campus-wide inclusivity.
+              </p>
+            </div>
+
+            <div class="pt-2 border-t border-studio-cardBorder space-y-2">
+              <div class="flex items-center justify-between flex-wrap gap-1.5">
+                <span class="text-[11px] font-semibold uppercase tracking-wider text-slate-400">Software Used:</span>
+                <div class="flex items-center gap-1.5">
+                  <span class="px-2 py-0.5 rounded-lg bg-blue-500/15 border border-blue-500/30 text-[11px] font-semibold text-studio-sky flex items-center gap-1">
+                    <i class="fa-brands fa-microsoft text-[10px]"></i> Clipchamp
+                  </span>
+                  <span class="px-2 py-0.5 rounded-lg bg-cyan-500/15 border border-cyan-500/30 text-[11px] font-semibold text-studio-sky flex items-center gap-1">
+                    <i class="fa-solid fa-scissors text-[10px]"></i> CapCut
+                  </span>
+                </div>
+              </div>
+
+              <div class="grid grid-cols-2 gap-2 pt-1">
+                <button onclick="openModal(2)" class="w-full py-2 rounded-xl bg-studio-card hover:bg-studio-dark border border-studio-cardBorder text-xs text-slate-200 font-medium flex items-center justify-center gap-1.5 transition-colors">
+                  <i class="fa-regular fa-file-lines text-studio-sky"></i>
+                  <span>Transcript</span>
+                </button>
+                <a 
+                  id="drive-link-2"
+                  class="drive-link w-full py-2 rounded-xl bg-studio-blue/20 hover:bg-studio-blue/30 border border-studio-blue/40 text-xs text-studio-sky font-medium flex items-center justify-center gap-1.5 transition-colors"
+                  href="https://drive.google.com/file/d/16wM66jrlF82nWzvBRuCsfUCBLp3NdgFY/view" 
+                  target="_blank"
+                  rel="noopener noreferrer">
+                  <i class="fa-brands fa-google-drive text-emerald-400"></i>
+                  <span>Open in Drive</span>
+                </a>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+
+        <!-- ================= WORK SAMPLE 3 ================= -->
+        <div class="bg-studio-surface/90 rounded-3xl border border-studio-cardBorder hover:border-studio-blue/70 transition-all p-4 flex flex-col shadow-xl group">
+          
+          <div class="video-container relative w-full aspect-vertical bg-black rounded-2xl overflow-hidden shadow-inner flex flex-col justify-end select-none" id="player-container-3">
+            
+            <div id="poster-3" class="absolute inset-0 w-full h-full bg-cover bg-center cursor-pointer z-10 transition-opacity duration-300 flex items-center justify-center" onclick="activateDrivePlayer(3)">
+              <img 
+                src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 720 1280' width='100%' height='100%'><defs><linearGradient id='bg3' x1='0%25' y1='0%25' x2='100%25' y2='100%25'><stop offset='0%25' stop-color='%2306132D'/><stop offset='65%25' stop-color='%230B2447'/><stop offset='100%25' stop-color='%230083CA'/></linearGradient></defs><rect width='720' height='1280' fill='url(%23bg3)'/><circle cx='360' cy='620' r='120' fill='%23E02424' opacity='0.85'/><circle cx='330' cy='590' r='18' fill='%23FFFFFF'/><circle cx='375' cy='580' r='18' fill='%23FFFFFF'/><circle cx='350' cy='635' r='18' fill='%23FFFFFF'/><rect x='80' y='800' width='560' height='170' rx='24' fill='%23000000' opacity='0.75'/><text x='360' y='865' fill='%23FFFFFF' font-family='sans-serif' font-weight='800' font-size='30' text-anchor='middle'>Special Olympics NC</text><text x='360' y='920' fill='%2338BDF8' font-family='sans-serif' font-weight='800' font-size='30' text-anchor='middle'>Summer Games Buffalo Lanes</text><rect x='190' y='220' width='340' height='44' rx='22' fill='%230083CA'/><text x='360' y='249' fill='%23FFFFFF' font-family='sans-serif' font-weight='700' font-size='18' text-anchor='middle' letter-spacing='2'>BOWLING HIGHLIGHT REEL</text></svg>" 
+                alt="Bowling Highlight Reel Poster"
+                class="w-full h-full object-cover"
+              />
+
+              <div class="absolute top-3 inset-x-3 flex items-center justify-between z-20 pointer-events-none">
+                <span class="px-2.5 py-1 rounded-full bg-black/70 backdrop-blur-md text-[10px] font-bold tracking-wider text-white border border-white/10 uppercase">
+                  Event Highlight
+                </span>
+                <span class="w-8 h-8 rounded-full bg-black/70 backdrop-blur-md text-slate-300 flex items-center justify-center border border-white/10">
+                  <i class="fa-brands fa-google-drive text-xs text-emerald-400"></i>
+                </span>
+              </div>
+
+              <button 
+                type="button"
+                aria-label="Play Reel 3"
+                class="absolute m-auto w-16 h-16 rounded-full bg-studio-blue/95 hover:bg-studio-sky text-white flex items-center justify-center text-xl shadow-2xl z-20 transition-all duration-200 transform group-hover:scale-110 studio-glow">
+                <i class="fa-solid fa-play ml-1"></i>
+              </button>
+
+              <div class="absolute bottom-3 inset-x-3 z-20 pointer-events-none text-center">
+                <span class="px-3 py-1 rounded-full bg-black/75 backdrop-blur-md text-[11px] font-medium text-slate-300 border border-white/10">
+                  <i class="fa-solid fa-arrow-pointer text-studio-sky mr-1"></i> Tap to play video
+                </span>
+              </div>
+            </div>
+
+            <iframe 
+              id="drive-frame-3" 
+              class="w-full h-full border-0 absolute inset-0 bg-black"
+              src=""
+              data-src="https://drive.google.com/file/d/1v9SBEB1VMElk01-V7o9ozrn5gl1adJE6/preview"
+              allow="autoplay; fullscreen"
+              loading="lazy"
+              title="SONC Bowling Highlight Reel">
+            </iframe>
+
+          </div>
+
+          <div class="mt-4 flex-1 flex flex-col justify-between space-y-3">
+            <div>
+              <p class="text-xs text-studio-sky font-semibold">NC Summer Games • Buffalo Lanes</p>
+              <h3 class="font-display font-bold text-white text-base mt-0.5 group-hover:text-studio-sky transition-colors">
+                SONC Bowling Highlight Reel
+              </h3>
+              <p class="text-slate-400 text-xs mt-1.5 line-clamp-2 leading-relaxed">
+                Dynamic montage featuring personalized voiceover, athletic celebration, and community spirit.
+              </p>
+            </div>
+
+            <div class="pt-2 border-t border-studio-cardBorder space-y-2">
+              <div class="flex items-center justify-between">
+                <span class="text-[11px] font-semibold uppercase tracking-wider text-slate-400">Software Used:</span>
+                <span class="px-2.5 py-1 rounded-lg bg-blue-500/15 border border-blue-500/30 text-xs font-semibold text-studio-sky flex items-center gap-1.5">
+                  <i class="fa-brands fa-microsoft text-[11px]"></i> Microsoft Clipchamp
+                </span>
+              </div>
+
+              <div class="grid grid-cols-2 gap-2 pt-1">
+                <button onclick="openModal(3)" class="w-full py-2 rounded-xl bg-studio-card hover:bg-studio-dark border border-studio-cardBorder text-xs text-slate-200 font-medium flex items-center justify-center gap-1.5 transition-colors">
+                  <i class="fa-regular fa-file-lines text-studio-sky"></i>
+                  <span>Transcript</span>
+                </button>
+                <a 
+                  id="drive-link-3"
+                  class="drive-link w-full py-2 rounded-xl bg-studio-blue/20 hover:bg-studio-blue/30 border border-studio-blue/40 text-xs text-studio-sky font-medium flex items-center justify-center gap-1.5 transition-colors"
+                  href="https://drive.google.com/file/d/1v9SBEB1VMElk01-V7o9ozrn5gl1adJE6/view" 
+                  target="_blank"
+                  rel="noopener noreferrer">
+                  <i class="fa-brands fa-google-drive text-emerald-400"></i>
+                  <span>Open in Drive</span>
+                </a>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- ================= LINKEDIN CAMPAIGN COLLABORATION SHOWCASE ================= -->
+      <div class="bg-gradient-to-br from-studio-card to-studio-surface rounded-3xl border border-studio-cardBorder p-6 sm:p-10 shadow-2xl">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+          
+          <!-- Context & Overview -->
+          <div class="lg:col-span-6 space-y-5">
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#0A66C2]/20 border border-[#0A66C2]/40 text-[#38BDF8] text-xs font-semibold">
+              <i class="fa-brands fa-linkedin"></i>
+              <span>Live Social Collaboration</span>
+            </div>
+
+            <h3 class="font-display text-2xl sm:text-3xl font-extrabold text-white">
+              Special Olympics Feature: "What Does Inclusion Mean to Me?"
+            </h3>
+
+            <p class="text-slate-300 text-sm sm:text-base leading-relaxed">
+              A collaborative social campaign exploring personal perspectives on the question: <strong class="text-white font-semibold">"What does inclusion mean to me?"</strong> This live LinkedIn feature demonstrates how thoughtful vertical editing drives authentic engagement, dialogue, and community empowerment directly within social feeds.
+            </p>
+
+            <div class="grid grid-cols-2 gap-4 py-2">
+              <div class="p-3.5 rounded-xl bg-studio-dark/60 border border-studio-cardBorder">
+                <span class="block text-white font-bold text-base">Organic Reach</span>
+                <span class="text-xs text-slate-400">Optimized for feed retention</span>
+              </div>
+              <div class="p-3.5 rounded-xl bg-studio-dark/60 border border-studio-cardBorder">
+                <span class="block text-white font-bold text-base">Sound-Off Ready</span>
+                <span class="text-xs text-slate-400">High-contrast subtitles</span>
+              </div>
+            </div>
+
+            <div class="pt-1">
+              <span class="px-3 py-1.5 rounded-xl bg-studio-dark/70 border border-studio-cardBorder text-xs text-slate-300 font-medium inline-flex items-center gap-2">
+                <i class="fa-brands fa-microsoft text-blue-400"></i>
+                <span>Edited in Microsoft Clipchamp • Multi-Contributor Cut</span>
+              </span>
+            </div>
+          </div>
+
+          <!-- The Live LinkedIn Iframe correctly framed without squishing -->
+          <div class="lg:col-span-6 flex justify-center">
+            <div class="w-full max-w-[504px] bg-white rounded-2xl overflow-hidden shadow-2xl border border-slate-700/60 flex flex-col items-center">
+              <div class="w-full bg-[#0A66C2] px-4 py-2 text-white text-xs font-semibold flex items-center justify-between">
+                <span><i class="fa-brands fa-linkedin mr-1.5"></i> LinkedIn Embedded Post</span>
+                <a href="https://www.linkedin.com/embed/feed/update/urn:li:ugcPost:7487612941807124480?collapsed=1" target="_blank" rel="noopener noreferrer" class="hover:underline text-[11px]">Open full <i class="fa-solid fa-arrow-up-right-from-square ml-0.5"></i></a>
+              </div>
+              
+              <!-- LinkedIn Embed Frame -->
+              <div class="w-full overflow-x-auto flex justify-center bg-slate-900">
+                <iframe 
+                  src="https://www.linkedin.com/embed/feed/update/urn:li:ugcPost:7487612941807124480?collapsed=1" 
+                  height="620" 
+                  width="504" 
+                  frameborder="0" 
+                  allowfullscreen="" 
+                  title="Embedded post"
+                  class="w-full max-w-full border-0">
+                </iframe>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </section>
+
+    <section id="toolkit" class="py-20 bg-studio-surface/50 border-t border-studio-cardBorder/60">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        
+        <div class="text-center max-w-2xl mx-auto mb-14">
+          <div class="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-studio-sky bg-studio-dark/80 px-3.5 py-1.5 rounded-full border border-studio-cardBorder mb-3">
+            <i class="fa-solid fa-sliders"></i>
+            <span>Creative Skillset</span>
+          </div>
+          <h2 class="font-display text-3xl sm:text-4xl font-extrabold text-white">
+            How I Build High-Performing Shorts
+          </h2>
+          <p class="text-slate-300 text-sm sm:text-base mt-2">
+            Every second counts in vertical content. Here is how I maximize audience retention.
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div class="p-6 rounded-2xl bg-studio-card/80 border border-studio-cardBorder hover:border-studio-blue transition-colors">
+            <div class="w-12 h-12 rounded-xl bg-studio-blue/20 text-studio-sky flex items-center justify-center text-xl mb-4">
+              <i class="fa-solid fa-bolt"></i>
+            </div>
+            <h3 class="font-display font-bold text-white text-lg mb-2">3-Second Hook Craft</h3>
+            <p class="text-slate-300 text-xs sm:text-sm leading-relaxed">
+              Curating high-energy visual intros, questions, and audio stingers to prevent immediate user drop-off.
+            </p>
+          </div>
+
+          <div class="p-6 rounded-2xl bg-studio-card/80 border border-studio-cardBorder hover:border-studio-blue transition-colors">
+            <div class="w-12 h-12 rounded-xl bg-studio-sky/20 text-studio-sky flex items-center justify-center text-xl mb-4">
+              <i class="fa-solid fa-closed-captioning"></i>
+            </div>
+            <h3 class="font-display font-bold text-white text-lg mb-2">Kinetic Subtitles</h3>
+            <p class="text-slate-300 text-xs sm:text-sm leading-relaxed">
+              Accurate, animated text syncing designed for the 70%+ of viewers watching silently in public.
+            </p>
+          </div>
+
+          <div class="p-6 rounded-2xl bg-studio-card/80 border border-studio-cardBorder hover:border-studio-blue transition-colors">
+            <div class="w-12 h-12 rounded-xl bg-blue-500/20 text-studio-sky flex items-center justify-center text-xl mb-4">
+              <i class="fa-solid fa-wave-square text-lg"></i>
+            </div>
+            <h3 class="font-display font-bold text-white text-lg mb-2">Pacing &amp; Rhythmic Cuts</h3>
+            <p class="text-slate-300 text-xs sm:text-sm leading-relaxed">
+              Eliminating dead air, tightening pauses, and matching transition points directly with soundtrack downbeats.
+            </p>
+          </div>
+
+          <div class="p-6 rounded-2xl bg-studio-card/80 border border-studio-cardBorder hover:border-studio-blue transition-colors">
+            <div class="w-12 h-12 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-xl mb-4">
+              <i class="fa-solid fa-crop-simple"></i>
+            </div>
+            <h3 class="font-display font-bold text-white text-lg mb-2">Safe-Zone Framing</h3>
+            <p class="text-slate-300 text-xs sm:text-sm leading-relaxed">
+              Carefully balancing text and graphics away from TikTok / Reel icons, comment trays, and UI buttons.
+            </p>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <section id="contact" class="py-20 relative overflow-hidden">
+      <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        
+        <div class="text-center max-w-xl mx-auto mb-12">
+          <div class="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-studio-sky bg-studio-surface px-3 py-1.5 rounded-full border border-studio-cardBorder mb-3">
+            <i class="fa-regular fa-envelope"></i>
+            <span>Get In Touch</span>
+          </div>
+          <h2 class="font-display text-3xl sm:text-4xl font-extrabold text-white">
+            Let's Collaborate
+          </h2>
+          <p class="text-slate-300 text-sm sm:text-base mt-2">
+            Have a channel, a brand, or an editing opportunity? Reach out directly!
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-stretch">
+          
+          <!-- Email Card (Plain Text with Actions Below) -->
+          <div class="p-7 rounded-3xl bg-gradient-to-br from-studio-card to-studio-surface border border-studio-cardBorder shadow-xl flex flex-col justify-between">
+            <div class="space-y-4">
+              <div class="w-12 h-12 rounded-2xl bg-studio-blue/20 text-studio-sky flex items-center justify-center text-xl">
+                <i class="fa-solid fa-envelope"></i>
+              </div>
+              <div>
+                <p class="text-xs uppercase font-semibold tracking-wider text-slate-400">Direct Email</p>
+                <p class="font-display font-bold text-lg text-white block mt-1 break-all select-all tracking-wide">
+                  robertsjadon03@gmail.com
+                </p>
+              </div>
+              <p class="text-xs text-slate-300 leading-relaxed">
+                Send your raw footage links, project timelines, or editing role inquiries directly to Jadon.
+              </p>
+            </div>
+
+            <div class="pt-6 mt-6 border-t border-studio-cardBorder/60 flex items-center gap-3">
+              <button onclick="copyEmailToClipboard()" class="flex-1 py-2.5 rounded-xl bg-studio-dark hover:bg-studio-card border border-studio-cardBorder text-xs font-semibold text-studio-sky transition-colors flex items-center justify-center gap-2">
+                <i class="fa-regular fa-copy"></i>
+                <span id="copyBtnText">Copy Email</span>
+              </button>
+              <a href="mailto:robertsjadon03@gmail.com" class="flex-1 py-2.5 rounded-xl bg-studio-blue hover:bg-studio-sky text-white text-xs font-bold transition-colors flex items-center justify-center gap-2 studio-glow">
+                <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                <span>Open Mail</span>
+              </a>
+            </div>
+          </div>
+
+          <!-- LinkedIn Card (Plain Text with Actions Below) -->
+          <div class="p-7 rounded-3xl bg-gradient-to-br from-studio-card to-studio-surface border border-studio-cardBorder shadow-xl flex flex-col justify-between">
+            <div class="space-y-4">
+              <div class="w-12 h-12 rounded-2xl bg-[#0A66C2]/20 text-[#38BDF8] flex items-center justify-center text-xl">
+                <i class="fa-brands fa-linkedin-in"></i>
+              </div>
+              <div>
+                <p class="text-xs uppercase font-semibold tracking-wider text-slate-400">Professional Profile</p>
+                <p class="font-display font-bold text-lg text-white block mt-1 select-all tracking-wide">
+                  linkedin.com/in/jadon-roberts
+                </p>
+              </div>
+              <p class="text-xs text-slate-300 leading-relaxed">
+                Connect on LinkedIn for resume reviews, recommendations, and recent video publication posts.
+              </p>
+            </div>
+
+            <div class="pt-6 mt-6 border-t border-studio-cardBorder/60">
+              <a href="https://www.linkedin.com/in/jadon-roberts-031041270/" target="_blank" rel="noopener noreferrer" class="w-full py-2.5 rounded-xl bg-[#0A66C2] hover:bg-sky-600 text-white text-xs font-bold transition-colors flex items-center justify-center gap-2 shadow-lg">
+                <i class="fa-brands fa-linkedin"></i>
+                <span>View LinkedIn Profile</span>
+              </a>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+  </main>
+
+  <footer class="bg-studio-dark border-t border-studio-cardBorder py-8">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+      <div class="flex items-center gap-2.5">
+        <div class="w-7 h-7 rounded-lg bg-studio-blue flex items-center justify-center text-white text-xs font-bold">
+          J
+        </div>
+        <span class="font-display font-bold text-sm text-white">Jadon's Short-Form Studio</span>
+      </div>
+      <p class="text-xs text-slate-400">
+        © 2026 Jadon Roberts. Crafted for high-retention vertical storytelling.
+      </p>
+      <div class="flex items-center gap-4 text-slate-400">
+        <a href="mailto:robertsjadon03@gmail.com" class="hover:text-white transition-colors" title="Email"><i class="fa-solid fa-envelope"></i></a>
+        <a href="https://www.linkedin.com/in/jadon-roberts-031041270/" target="_blank" rel="noopener noreferrer" class="hover:text-white transition-colors" title="LinkedIn"><i class="fa-brands fa-linkedin"></i></a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Clean Modal (Replaces Jagged In-Card Accordion Clutter) -->
+  <div id="inspectorModal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden flex items-center justify-center p-4">
+    <div class="bg-studio-card border border-studio-cardBorder rounded-3xl max-w-lg w-full p-6 shadow-2xl relative animate-in fade-in zoom-in-95 duration-200">
+      
+      <div class="flex items-center justify-between pb-4 border-b border-studio-cardBorder/60">
+        <div>
+          <span class="text-xs font-bold uppercase tracking-wider text-studio-sky" id="modalCategory">Reel Details</span>
+          <h4 class="font-display font-bold text-lg text-white" id="modalTitle">Project Title</h4>
+        </div>
+        <button onclick="closeModal()" class="w-8 h-8 rounded-full bg-studio-dark hover:bg-studio-surface text-slate-300 hover:text-white flex items-center justify-center transition-colors">
+          <i class="fa-solid fa-xmark text-sm"></i>
+        </button>
+      </div>
+
+      <div class="py-4 space-y-4 max-h-[60vh] overflow-y-auto pr-1">
+        <div>
+          <p class="text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1.5">Spoken Video Transcript</p>
+          <div class="p-3.5 rounded-xl bg-studio-dark/80 border border-studio-cardBorder/60 text-slate-200 text-xs sm:text-sm leading-relaxed" id="modalTranscript">
+            <!-- Transcript injected here -->
+          </div>
+        </div>
+
+        <div>
+          <p class="text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1.5">Software &amp; Editing Breakdown</p>
+          <p class="text-slate-300 text-xs leading-relaxed" id="modalWorkflow">
+            <!-- Workflow details injected here -->
+          </p>
+        </div>
+      </div>
+
+      <div class="pt-4 border-t border-studio-cardBorder/60 flex items-center justify-end gap-3">
+        <button onclick="copyModalTranscript()" class="px-4 py-2 rounded-xl bg-studio-surface hover:bg-studio-dark border border-studio-cardBorder text-xs text-studio-sky font-semibold flex items-center gap-1.5 transition-colors">
+          <i class="fa-regular fa-copy"></i>
+          <span>Copy Transcript</span>
+        </button>
+        <button onclick="closeModal()" class="px-5 py-2 rounded-xl bg-studio-blue hover:bg-studio-sky text-white text-xs font-bold transition-colors">
+          Done
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Google Drive Iframe Preview Modal (Guaranteed Fallback Player) -->
+  <div id="driveIframeModal" class="fixed inset-0 z-50 bg-black/90 backdrop-blur-md hidden flex items-center justify-center p-4">
+    <div class="bg-studio-card border border-studio-cardBorder rounded-3xl max-w-2xl w-full p-5 sm:p-6 shadow-2xl relative animate-in fade-in zoom-in-95 duration-200">
+      
+      <div class="flex items-center justify-between pb-3 border-b border-studio-cardBorder/60">
+        <div class="flex items-center gap-2.5">
+          <i class="fa-brands fa-google-drive text-emerald-400 text-lg"></i>
+          <div>
+            <span class="text-[11px] font-bold uppercase tracking-wider text-studio-sky">Google Drive Embed Player</span>
+            <h4 class="font-display font-bold text-base text-white" id="driveModalTitle">Video Title</h4>
+          </div>
+        </div>
+        <button onclick="closeDriveModal()" class="w-8 h-8 rounded-full bg-studio-dark hover:bg-studio-surface text-slate-300 hover:text-white flex items-center justify-center transition-colors">
+          <i class="fa-solid fa-xmark text-sm"></i>
+        </button>
+      </div>
+
+      <!-- 9:16 or responsive video container for Drive embed iframe -->
+      <div class="my-4 relative w-full aspect-video sm:aspect-vertical max-h-[65vh] bg-black rounded-2xl overflow-hidden border border-studio-cardBorder flex items-center justify-center">
+        <iframe 
+          id="drivePreviewIframe"
+          src="" 
+          class="w-full h-full border-0"
+          allow="autoplay; fullscreen" 
+          title="Google Drive Video Player">
+        </iframe>
+      </div>
+
+      <div class="pt-3 border-t border-studio-cardBorder/60 flex items-center justify-between gap-3">
+        <a id="driveModalExternalLink" href="#" target="_blank" rel="noopener noreferrer" class="px-4 py-2.5 rounded-xl bg-studio-blue/20 hover:bg-studio-blue/30 border border-studio-blue/40 text-xs font-semibold text-studio-sky flex items-center gap-2 transition-colors">
+          <i class="fa-solid fa-arrow-up-right-from-square text-xs"></i>
+          <span>Open Full Drive Tab</span>
+        </a>
+        <button onclick="closeDriveModal()" class="px-5 py-2.5 rounded-xl bg-studio-blue hover:bg-studio-sky text-white text-xs font-bold transition-colors">
+          Close Player
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Toast Notification -->
+  <div id="toast" class="fixed bottom-6 right-6 z-50 transform translate-y-24 opacity-0 transition-all duration-300 pointer-events-none">
+    <div class="bg-studio-dark text-white px-5 py-3 rounded-xl shadow-2xl border border-studio-blue flex items-center gap-3 text-xs font-medium">
+      <i class="fa-solid fa-circle-check text-studio-sky text-sm"></i>
+      <span id="toastMessage">Notification message</span>
+    </div>
+  </div>
+
+  <script>
+    // Video Metadata Dictionary with Google Drive Integration
+    const reelData = {
+      1: {
+        category: "Special Olympics • Athlete Spotlight",
+        title: '"Never Give Up": Overcoming Odds',
+        software: "Microsoft Clipchamp & CapCut",
+        shareLink: "https://drive.google.com/file/d/1WKxtkPvQiCl34yLa2yZSuHWhx7I-QASb/view",
+        embedUrl: "https://drive.google.com/file/d/1WKxtkPvQiCl34yLa2yZSuHWhx7I-QASb/preview",
+        transcript: "Being a Special Olympics athlete has taught me to never give up when things get hard. Um, it showed me that it's okay to make mistakes and keep on trying to excel in the best you can be because I know I've had times when I've been told I wasn't capable of anything. I was even told that I wasn't even able to go to college by some people in my life. So, I wanted to prove them wrong and I feel like having that effect of negativity doesn't get you anywhere where I rather than I'll say that as like we're only people and we're just learn differently because everyone learns differently, no matter what.",
+        workflow: "Cut and assembled using Microsoft Clipchamp and CapCut. Structured with an immediate emotional narrative hook, high-retention vertical pacing, sound design, and clear subtitles calibrated for sound-off social viewing."
+      },
+      2: {
+        category: "Villanova Inclusion • Multi-Cam Podcast",
+        title: "Holistic College Experience & Inclusion",
+        software: "Microsoft Clipchamp & CapCut",
+        shareLink: "https://drive.google.com/file/d/16wM66jrlF82nWzvBRuCsfUCBLp3NdgFY/view",
+        embedUrl: "https://drive.google.com/file/d/16wM66jrlF82nWzvBRuCsfUCBLp3NdgFY/preview",
+        transcript: "Villanova does a really good job of of offering our students the holistic college experience where they're able to grow in every facet of their being and um, you know, and and really puts our students at the center of those decision-making processes. Like we always have a person-centered approach to everything that we do, just allow um, you know, individuals with intellectual disabilities to have the same experiences as their peers and and to really see the ways that they transform campus uh just as our students have been able to do at Villanova. That is the perfect. I mean, I I'm sitting here in awe. I'm like that's how that's a very That's how you put it into words.",
+        workflow: "Multi-camera studio pacing assembled in Microsoft Clipchamp with kinetic pacing and typography refined in CapCut, framed for 9:16 vertical delivery with centered eye-lines and conversational flow."
+      },
+      3: {
+        category: "Special Olympics North Carolina • Event Montage",
+        title: "SONC Bowling: Energy & Pride On Every Lane",
+        software: "Microsoft Clipchamp",
+        shareLink: "https://drive.google.com/file/d/1v9SBEB1VMElk01-V7o9ozrn5gl1adJE6/view",
+        embedUrl: "https://drive.google.com/file/d/1v9SBEB1VMElk01-V7o9ozrn5gl1adJE6/preview",
+        transcript: "At the Special Olympics North Carolina Summer Games, the bowling alley was full of energy. Athletes competed at Buffalo Lane going for strikes, fails, and big moments on every lane. What stood out most was the pride, confidence, and joy on everyone's faces. Awards were given to the athletes who scored the most points, but every athlete had something to be proud of. This place is special to me, too. I used to bowl here as a kid, learn the game here, and even competed in Special Olympics when I was younger. Seeing athletes compete, make friends, earn awards, and build community made this experience unforgettable.",
+        workflow: "Assembled and cut in Microsoft Clipchamp. Synchronizes fast-paced roll-to-pin visual cuts with personal voiceover narrative and athlete award ceremonies."
+      }
+    };
+
+    // Activate the embedded Drive player directly inside the 9:16 card
+    function activateDrivePlayer(id) {
+      const data = reelData[id];
+      if (!data) return;
+
+      const poster = document.getElementById(`poster-${id}`);
+      const frame = document.getElementById(`drive-frame-${id}`);
+
+      if (!frame) return;
+
+      // Set iframe src to trigger playback if not already loaded
+      if (!frame.src || frame.src === '' || frame.src === window.location.href) {
+        frame.src = data.embedUrl;
+      }
+
+      // Hide the poster overlay to reveal the active player
+      if (poster) {
+        poster.classList.add('opacity-0', 'pointer-events-none');
+      }
+
+      showToast(`Loading "${data.title}"...`);
+    }
+
+    let activeModalId = 1;
+
+    // Mobile Menu Logic
+    document.addEventListener('DOMContentLoaded', () => {
+      const mobileBtn = document.getElementById('mobileMenuBtn');
+      const mobileMenu = document.getElementById('mobileMenu');
+      const menuIcon = document.getElementById('menuIcon');
+
+      if (mobileBtn && mobileMenu) {
+        mobileBtn.addEventListener('click', () => {
+          mobileMenu.classList.toggle('hidden');
+          menuIcon.classList.toggle('fa-bars');
+          menuIcon.classList.toggle('fa-xmark');
+        });
+
+        document.querySelectorAll('.mobile-nav-link').forEach(link => {
+          link.addEventListener('click', () => {
+            mobileMenu.classList.add('hidden');
+            menuIcon.classList.replace('fa-xmark', 'fa-bars');
+          });
+        });
+      }
+    });
+
+    // Inspector Modal
+    function openModal(id) {
+      activeModalId = id;
+      const data = reelData[id];
+      if (!data) return;
+
+      document.getElementById('modalCategory').textContent = data.category;
+      document.getElementById('modalTitle').textContent = data.title;
+      document.getElementById('modalTranscript').textContent = data.transcript;
+      document.getElementById('modalWorkflow').textContent = data.workflow;
+
+      const modal = document.getElementById('inspectorModal');
+      if (modal) modal.classList.remove('hidden');
+    }
+
+    function closeModal() {
+      const modal = document.getElementById('inspectorModal');
+      if (modal) modal.classList.add('hidden');
+    }
+
+    // Escape Key Listener
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        closeModal();
+      }
+    });
+
+    // Copy Transcript helper
+    function copyModalTranscript() {
+      const data = reelData[activeModalId];
+      if (!data) return;
+
+      copyText(data.transcript, "Transcript copied to clipboard!");
+    }
+
+    // Email Copy Helper
+    function copyEmailToClipboard() {
+      copyText("robertsjadon03@gmail.com", "Email copied: robertsjadon03@gmail.com");
+      const btn = document.getElementById('copyBtnText');
+      if (btn) {
+        btn.textContent = "Copied!";
+        setTimeout(() => { btn.textContent = "Copy Email"; }, 2000);
+      }
+    }
+
+    // Generic Clipboard copy
+    function copyText(text, successMessage) {
+      const el = document.createElement('textarea');
+      el.value = text;
+      document.body.appendChild(el);
+      el.select();
+      try {
+        document.execCommand('copy');
+        showToast(successMessage);
+      } catch (err) {
+        showToast(text);
+      } finally {
+        document.body.removeChild(el);
+      }
+    }
+
+    // Toast Notification System
+    function showToast(message) {
+      const toast = document.getElementById('toast');
+      const text = document.getElementById('toastMessage');
+      if (!toast || !text) return;
+
+      text.textContent = message;
+      toast.classList.remove('translate-y-24', 'opacity-0');
+      toast.classList.add('translate-y-0', 'opacity-100');
+
+      setTimeout(() => {
+        toast.classList.remove('translate-y-0', 'opacity-100');
+        toast.classList.add('translate-y-24', 'opacity-0');
+      }, 3000);
+    }
+  </script>
+</body>
+</html>
